@@ -141,7 +141,7 @@ const Login: VFC = () => {
           <Typography variant="h4" component="h2" gutterBottom>Login</Typography>
           {isLoginfailed ? <Typography variant="body2" color="secondary" gutterBottom>Invalid user name or password.</Typography> : null}
           <Box className={classes.item}>
-            <TextField className={classes.input} required id="standard-required" label="User" value={userName} onChange={userNameChange} />
+            <TextField className={classes.input} required id="standard-required" label="User" value={userName} helperText="Use [User: tester1, Password: tester1] for trial" onChange={userNameChange} />
           </Box>
           <Box className={classes.item}>
             <TextField
