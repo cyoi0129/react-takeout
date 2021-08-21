@@ -1,7 +1,6 @@
-import { VFC, FC } from "react";
+import { FC, Fragment } from "react";
 import { useAppSelector } from '../store/hooks';
-import { foodItem, foodList } from "../model/Food";
-import { orderList, orderItem, orderFood } from "../model/Order";
+import { orderItem } from "../model/Order";
 import { selectShop, shopList } from '../model/Shop';
 import { ItemHistory } from ".";
 import { makeStyles, createStyles, Theme, Grid, Typography, Divider } from '@material-ui/core';
@@ -73,7 +72,7 @@ const OrderHistroy: FC<Props> = (Props) => {
     <>
       <Typography variant="h4" component="h2" gutterBottom>Order History</Typography>
       {sortedOrderList.map((order, key) =>
-        <>
+        <Fragment key={key}>
           <Typography variant="h5" component="h2" gutterBottom>Order No: {order.id}</Typography>
           <Grid container spacing={2} className={classes.detail}>
             <Grid item>
@@ -89,9 +88,9 @@ const OrderHistroy: FC<Props> = (Props) => {
               Payment: ¥{formatter.format(order.total)}
             </Grid>
           </Grid>
-          {order.items.map(foodItem => <ItemHistory item={foodItem} />)}
+          {order.items.map((foodItem, index) => <ItemHistory key={index} item={foodItem} />)}
           <Divider className={classes.border} variant="middle" />
-        </>
+        </Fragment>
       )}
     </>
   );

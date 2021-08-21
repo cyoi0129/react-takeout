@@ -120,8 +120,8 @@ const FoodItemOrder: FC<Props> = (Props) => {
                   value={amount}
                   onChange={handleChange}
                 >
-                  {[...Array(10)].map((_, i) =>
-                    <MenuItem value={i + 1}>{i + 1}</MenuItem>
+                  {[...Array(10)].map((_, index) =>
+                    <MenuItem key={index} value={index + 1}>{index + 1}</MenuItem>
                   )}
                 </Select>
               </FormControl>

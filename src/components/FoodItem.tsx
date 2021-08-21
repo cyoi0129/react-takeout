@@ -1,6 +1,6 @@
-import { VFC, FC } from "react";
+import { FC } from "react";
 import { Link } from "react-router-dom";
-import { foodItem, foodList } from "../model/Food";
+import { foodItem } from "../model/Food";
 import { makeStyles, createStyles, Theme, Grid, Paper, Typography, ButtonBase } from '@material-ui/core';
 
 export type Props = {

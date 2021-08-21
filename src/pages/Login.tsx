@@ -1,6 +1,6 @@
 import { VFC, useState } from "react";
 import { useAppSelector, useAppDispatch } from '../store/hooks';
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { getUserData, userData, createNewUser, selectLogin } from "../model/Login";
 import { changeNavigation } from '../model/Navigator';
 import SwipeableViews from 'react-swipeable-views';

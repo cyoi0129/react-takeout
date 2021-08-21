@@ -1,6 +1,6 @@
-import { VFC, FC } from "react";
+import { FC } from "react";
 import { shopItem } from "../model/Shop";
-import { makeStyles, createStyles, Theme, Grid, Paper, Typography, ButtonBase } from '@material-ui/core';
+import { makeStyles, createStyles, Theme, Typography } from '@material-ui/core';
 import { MapItem } from ".";
 
 export type Props = {

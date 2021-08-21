@@ -2,13 +2,24 @@ import { VFC } from "react";
 import { useAppSelector } from '../store/hooks';
 import { selectFood, foodList } from '../model/Food';
 import { FoodItem } from '../components';
+import { Container, Typography, makeStyles, createStyles, Theme } from "@material-ui/core";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      paddingTop: 24,
+      paddingBottom: 96,
+    },
+  }),
+);
 
 const Menu: VFC = () => {
+  const classes = useStyles();
   const foodSelector: foodList = useAppSelector(selectFood);
   return (
-    <>
-      {foodSelector? foodSelector.foodList.map((item,index) => <FoodItem key={index} item={item} />):"No food item."}
-    </>
+    <Container className={classes.root}>
+      {foodSelector? foodSelector.foodList.map((item,index) => <FoodItem key={index} item={item} />):<Typography variant="h5" gutterBottom>No food item.</Typography>}
+    </Container>
   );
 };
 

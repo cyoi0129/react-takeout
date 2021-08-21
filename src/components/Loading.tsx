@@ -1,4 +1,4 @@
-import { useState, FC } from 'react';
+import { FC } from 'react';
 import { makeStyles, createStyles, Theme, Backdrop, CircularProgress } from '@material-ui/core';
 
 export type Props = {

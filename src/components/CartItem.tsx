@@ -1,4 +1,4 @@
-import { useState, FC } from "react";
+import { FC } from "react";
 import { useAppDispatch } from '../store/hooks';
 import { orderFood, removeCartItem } from "../model/Order";
 import { makeStyles, Theme, createStyles, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Avatar, IconButton, Grid } from '@material-ui/core';

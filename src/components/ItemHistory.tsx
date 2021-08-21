@@ -1,4 +1,4 @@
-import { VFC, FC } from "react";
+import { FC } from "react";
 import { orderFood } from "../model/Order";
 import { makeStyles, createStyles, Theme, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@material-ui/core';
 

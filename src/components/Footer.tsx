@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) =>
       position: "fixed",
       width: "100%",
       bottom: 0,
-      paddingBottom: 16,
+      paddingBottom: 32,
+      zIndex: 10,
     },
   }),
 );

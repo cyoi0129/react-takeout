@@ -24,8 +24,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     total: {
       margin: 24,
-    }
-
+    },
+    border: {
+      marginTop: 36,
+    },
   }),
 );
 
@@ -65,11 +67,11 @@ const Cart: VFC = () => {
     }
     dispatch(addOrderItem(newOrder));
     setLoading(true);
-    setTimeout(()=>{
+    setTimeout(() => {
       setLoading(false);
       dispatch(changeNavigation(1));
       history.push("/account");
-    },2000);
+    }, 2000);
   }
 
   const goToLogin = () => {
@@ -78,7 +80,6 @@ const Cart: VFC = () => {
   }
 
   const getNowYMDhmsStr = () => {
-    console.log("called");
     const date = new Date();
     const Y: string = String(date.getFullYear());
     const M: string = ("00" + (date.getMonth() + 1)).slice(-2);
@@ -101,13 +102,17 @@ const Cart: VFC = () => {
             onChange={shopChange}
           >
             {shopList !== [] ? shopList.map((shopItem, index) =>
-              <MenuItem value={shopItem.id}>{shopItem.name}</MenuItem>
+              <MenuItem key={index} value={shopItem.id}>{shopItem.name}</MenuItem>
             ) : <MenuItem value='0'>No available shop</MenuItem>}
           </Select>
         </FormControl>
       </Typography>
-      {cartItems.length !== 0 ? cartItems.map((item, index) => <CartItem item={item} />) : null}
-      <Divider variant="middle" />
+      {cartItems.length !== 0 ?
+        <>
+          {cartItems.map((item, index) => <CartItem key={index} item={item} />)}
+          <Divider variant="middle" className={classes.border} />
+        </>
+        : null}
       <Typography className={classes.total} variant="h5">{`Total: ¥${formatter.format(cartTotal)}`}</Typography>
       {loginStatus && cartItems.length !== 0 ? <Button className={classes.button} variant="contained" color="primary" onClick={checkOut}>Order</Button> : null}
       {!loginStatus ? <Button className={classes.button} variant="contained" color="primary" onClick={goToLogin}>Login</Button> : null}

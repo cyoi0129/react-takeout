@@ -1,8 +1,7 @@
 import { VFC } from "react";
 import { useAppSelector } from '../store/hooks';
-import { useParams, useRouteMatch } from "react-router";
-import { selectFood, foodList, foodItem } from '../model/Food';
-import { FoodItem } from '../components';
+import { useRouteMatch } from "react-router";
+import { selectFood, foodList } from '../model/Food';
 import { FoodItemOrder } from "../components";
 
 const Detail: VFC = () => {
