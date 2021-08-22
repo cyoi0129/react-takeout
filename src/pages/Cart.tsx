@@ -155,6 +155,7 @@ const Cart: VFC = () => {
 
   return (
     <Container className={classes.root}>
+      <Typography variant="h4" component="h2" gutterBottom>Cart</Typography>
       <Grid container className={classes.selectItem}>
         <Grid item><Typography variant="body2" className={classes.selectLabel}>Choose a store</Typography></Grid>
         <Grid item><Typography variant="h5" style={{ cursor: 'pointer' }}>

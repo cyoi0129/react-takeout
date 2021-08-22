@@ -15,6 +15,10 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: 32,
       marginBottom: 32,
     },
+    shops: {
+      flexGrow: 1,
+      justifyContent: 'center',
+    }
   }),
 );
 
@@ -28,10 +32,8 @@ const Home: VFC = () => {
       {foodSelector ? foodSelector.foodList.map((item, index) => <FoodItem key={index} item={item} />) : null}
       <Divider variant="middle" className={classes.border} />
       <Typography variant="h4" component="h2" gutterBottom>Shops</Typography>
-      <Grid container>
-        <Grid item>
-          {shopSelector ? shopSelector.shopList.map((shop, index) => <ShopItem key={index} item={shop} />) : null}
-        </Grid>
+      <Grid container className={classes.shops}>
+          {shopSelector ? shopSelector.shopList.map((shop, index) => <Grid key={index} item><ShopItem item={shop} /></Grid>) : null}
       </Grid>
     </Container>
   );
