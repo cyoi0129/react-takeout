@@ -60,7 +60,7 @@ const Cart: VFC = () => {
   const cartTotal: number = cartSelector.total;
   const classes = useStyles();
   const [shop, setShop] = useState(cartSelector.shop);
-  const [receipt, setReceipt] = useState("");
+  const [receipt, setReceipt] = useState("ASAP");
   const [payment, setPayment] = useState("shop");
   const [loading, setLoading] = useState(false);
 
@@ -122,7 +122,7 @@ const Cart: VFC = () => {
 
   const selection = () => {
     const date = new Date();
-    let timeSelection: string[] = [];
+    let timeSelection: string[] = ['ASAP'];
     let currentMinute = Math.floor(date.getMinutes() / 10) + 2;
     for (let i = 0; i < 10; i++) {
       currentMinute++;

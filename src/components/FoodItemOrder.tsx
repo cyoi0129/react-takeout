@@ -57,7 +57,7 @@ const FoodItemOrder: FC<Props> = (Props) => {
   const cartSelector: cartData = useAppSelector(selectCart);
   const addedItem = cartSelector.items.find(cartItem => cartItem.item.id === item.id);
   const cartItemAmount: number = addedItem ? addedItem.amount : 0;
-  const [amount, setAmount] = useState(cartItemAmount);
+  const [amount, setAmount] = useState(cartItemAmount===0?1:cartItemAmount);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (event: any) => {
@@ -121,13 +121,13 @@ const FoodItemOrder: FC<Props> = (Props) => {
                   onChange={handleChange}
                 >
                   {[...Array(10)].map((_, index) =>
-                    <MenuItem key={index} value={index + 1}>{index + 1}</MenuItem>
+                    <MenuItem key={index} value={index+1}>{index+1}</MenuItem>
                   )}
                 </Select>
               </FormControl>
             </Typography>
           </Button>
-          {cartItemAmount === 0 ? <Button size="small" className={classes.button} variant="contained" color="primary" onClick={addOrder}>Add</Button> : <Button size="small" className={classes.button} variant="contained" color="secondary" onClick={changeOrder}>Change</Button>}
+          {cartItemAmount === 0 ? <Button size="small" className={classes.button} variant="contained" color="primary" disabled={amount===0} onClick={addOrder}>Add</Button> : <Button size="small" className={classes.button} variant="contained" color="secondary" disabled={amount===0} onClick={changeOrder}>Change</Button>}
         </CardActions>
       </Card>
       <Loading show={loading} />
