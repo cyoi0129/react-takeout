@@ -110,7 +110,7 @@ const Login: VFC = () => {
     setLoading(true);
     setTimeout(() => {
       setSnackBar(true);
-    }, 1000);    
+    }, 1000);
     setTimeout(() => {
       setLoading(false);
       dispatch(changeNavigation(1));
@@ -129,7 +129,7 @@ const Login: VFC = () => {
     setLoading(true);
     setTimeout(() => {
       setSnackBar(true);
-    }, 1000); 
+    }, 1000);
     setTimeout(() => {
       setLoading(false);
       dispatch(changeNavigation(0));
@@ -210,7 +210,8 @@ const Login: VFC = () => {
       <Loading show={loading} />
       <div className={classes.snackbar}>
         <Snackbar open={snackBar} autoHideDuration={6000} onClose={handleClose}>
-          <Alert severity="success">Login(Sign up) Sucessed!</Alert>
+          {isLoginfailed ? <Alert severity="error">Login Failed!</Alert> : <Alert severity="success">Login(Sign up) Sucessed!</Alert>
+          }
         </Snackbar>
       </div>
     </div>
