@@ -1,11 +1,12 @@
-import { VFC, useState } from "react";
+import { VFC, useState, SyntheticEvent } from "react";
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { useHistory } from "react-router-dom";
 import { getUserData, userData, createNewUser, selectLogin } from "../model/Login";
 import { changeNavigation } from '../model/Navigator';
 import SwipeableViews from 'react-swipeable-views';
 import { Loading } from '../components';
-import { makeStyles, Theme, useTheme, AppBar, Tabs, Tab, Typography, Box, TextField, Button } from '@material-ui/core';
+import { makeStyles, Theme, useTheme, AppBar, Tabs, Tab, Typography, Box, TextField, Button, Snackbar } from '@material-ui/core';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -55,8 +56,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     width: 160
-  }
+  },
+  snackbar: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const Login: VFC = () => {
   const history = useHistory();
@@ -69,6 +80,7 @@ const Login: VFC = () => {
   const [userMail, setUserMail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [snackBar, setSnackBar] = useState(false);
 
   const isLogined: boolean = loginStatus.isLogined;
   const isLoginfailed: boolean = loginStatus.isLoginFailed;
@@ -97,10 +109,13 @@ const Login: VFC = () => {
     dispatch(getUserData(userName));
     setLoading(true);
     setTimeout(() => {
+      setSnackBar(true);
+    }, 1000);    
+    setTimeout(() => {
       setLoading(false);
       dispatch(changeNavigation(1));
       history.push("/account");
-    }, 1000);
+    }, 2000);
   }
 
   const handleSignUp = () => {
@@ -113,11 +128,21 @@ const Login: VFC = () => {
     dispatch(createNewUser(newUserData));
     setLoading(true);
     setTimeout(() => {
+      setSnackBar(true);
+    }, 1000); 
+    setTimeout(() => {
       setLoading(false);
       dispatch(changeNavigation(0));
       history.push("/");
-    }, 1000);
+    }, 2000);
   }
+
+  const handleClose = (event?: SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackBar(false);
+  };
 
   return (
     <div className={classes.root}>
@@ -183,6 +208,11 @@ const Login: VFC = () => {
         </TabPanel>
       </SwipeableViews>
       <Loading show={loading} />
+      <div className={classes.snackbar}>
+        <Snackbar open={snackBar} autoHideDuration={6000} onClose={handleClose}>
+          <Alert severity="success">Login(Sign up) Sucessed!</Alert>
+        </Snackbar>
+      </div>
     </div>
   );
 }

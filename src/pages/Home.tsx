@@ -3,13 +3,17 @@ import { useAppSelector } from '../store/hooks';
 import { selectFood, foodList } from '../model/Food';
 import { selectShop, shopList } from '../model/Shop';
 import { FoodItem, ShopItem } from '../components';
-import { Container, Typography, makeStyles, createStyles, Theme, Grid } from "@material-ui/core";
+import { Container, Typography, makeStyles, createStyles, Theme, Grid, Divider } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       paddingTop: 96,
       paddingBottom: 96,
+    },
+    border: {
+      marginTop: 32,
+      marginBottom: 32,
     },
   }),
 );
@@ -22,6 +26,7 @@ const Home: VFC = () => {
     <Container className={classes.root}>
       <Typography variant="h4" component="h2" gutterBottom>Foods</Typography>
       {foodSelector ? foodSelector.foodList.map((item, index) => <FoodItem key={index} item={item} />) : null}
+      <Divider variant="middle" className={classes.border} />
       <Typography variant="h4" component="h2" gutterBottom>Shops</Typography>
       <Grid container>
         <Grid item>

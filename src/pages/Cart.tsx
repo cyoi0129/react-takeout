@@ -1,4 +1,4 @@
-import { VFC, useState, ChangeEvent, useEffect } from "react";
+import { VFC, useState, ChangeEvent, SyntheticEvent } from "react";
 import { useHistory } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { changeNavigation } from '../model/Navigator';
@@ -6,7 +6,8 @@ import { loginStatus, selectLogin } from "../model/Login";
 import { selectShop, shopList } from "../model/Shop";
 import { orderFood, selectCart, cartData, addOrderItem, orderItem } from "../model/Order";
 import { CartItem, Loading } from '../components';
-import { makeStyles, createStyles, Theme, Button, Typography, Select, MenuItem, FormControl, Container, Divider, Radio, RadioGroup, FormControlLabel, FormLabel, Grid } from "@material-ui/core";
+import { makeStyles, createStyles, Theme, Button, Typography, Select, MenuItem, FormControl, Container, Divider, Radio, RadioGroup, FormControlLabel, FormLabel, Grid, Snackbar } from "@material-ui/core";
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,10 +42,20 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     selectLabel: {
       width: 160,
-      paddingTop:8,
-    }
+      paddingTop: 8,
+    },
+    snackbar: {
+      width: '100%',
+      '& > * + *': {
+        marginTop: theme.spacing(2),
+      },
+    },
   }),
 );
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const Cart: VFC = () => {
   const dispatch = useAppDispatch();
@@ -63,6 +74,7 @@ const Cart: VFC = () => {
   const [receipt, setReceipt] = useState("ASAP");
   const [payment, setPayment] = useState("shop");
   const [loading, setLoading] = useState(false);
+  const [snackBar, setSnackBar] = useState(false);
 
   const shopChange = (event: any) => {
     setShop(() => event.target.value);
@@ -95,14 +107,24 @@ const Cart: VFC = () => {
     dispatch(addOrderItem(newOrder));
     setLoading(true);
     setTimeout(() => {
-      setLoading(false);
+      setSnackBar(true);
+    }, 2000);
+    setTimeout(() => {
+      setSnackBar(false);
       dispatch(changeNavigation(1));
       history.push("/account");
-    }, 2000);
+    }, 3000);
   }
 
+  const handleClose = (event?: SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackBar(false);
+  };
+
   const goToLogin = () => {
-    dispatch(changeNavigation(0));
+    dispatch(changeNavigation(1));
     history.push("/login");
   }
 
@@ -117,8 +139,6 @@ const Cart: VFC = () => {
     const dateTime: string = Y + '/' + M + '/' + D + ' ' + h + ':' + m + ':' + s
     return dateTime;
   }
-
-
 
   const selection = () => {
     const date = new Date();
@@ -187,6 +207,11 @@ const Cart: VFC = () => {
       {loginStatus && cartItems.length !== 0 ? <Button className={classes.button} variant="contained" color="primary" onClick={checkOut}>Order</Button> : null}
       {!loginStatus ? <Button className={classes.button} variant="contained" color="primary" onClick={goToLogin}>Login</Button> : null}
       <Loading show={loading} />
+      <div className={classes.snackbar}>
+        <Snackbar open={snackBar} autoHideDuration={6000} onClose={handleClose}>
+          <Alert severity="success">Order Sucessed!</Alert>
+        </Snackbar>
+      </div>
     </Container>
   );
 };

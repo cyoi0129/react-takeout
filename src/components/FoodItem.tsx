@@ -1,7 +1,9 @@
 import { FC } from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { useAppDispatch } from '../store/hooks';
 import { foodItem } from "../model/Food";
 import { makeStyles, createStyles, Theme, Grid, Paper, Typography, ButtonBase } from '@material-ui/core';
+import { changeNavigation } from "../model/Navigator";
 
 export type Props = {
   item: foodItem;
@@ -36,15 +38,20 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const FoodItem: FC<Props> = (Props) => {
+  const dispatch = useAppDispatch();
+  const history = useHistory();
   const { item } = Props;
   const formatter = new Intl.NumberFormat('ja-JP');
   const jpPrice = formatter.format(item.price);
   const classes = useStyles();
 
+  const toItem = () => {
+    history.push(`/detail/${item.id}`);
+    dispatch(changeNavigation(2));
+  }
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <Link className={classes.link} to={`/detail/${item.id}`}>
+      <Paper className={classes.paper} onClick={toItem}>
         <Grid container spacing={2}>
           <Grid item>
             <ButtonBase className={classes.image}>
@@ -67,7 +74,6 @@ const FoodItem: FC<Props> = (Props) => {
             </Grid>
           </Grid>
         </Grid>
-        </Link>
       </Paper>
     </div>
   );
