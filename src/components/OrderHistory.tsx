@@ -82,10 +82,16 @@ const OrderHistroy: FC<Props> = (Props) => {
               Status: {order.ready ? "Ready" : "Cooking"}
             </Grid>
             <Grid item>
+              Receipt: {order.receipt}
+            </Grid>
+            <Grid item>
               Shop: {getShopName(order.shop)}
             </Grid>
             <Grid item>
               Payment: ¥{formatter.format(order.total)}
+            </Grid>
+            <Grid item>
+              Method: {order.payment ? "Pay online" : "Pay in shop"}
             </Grid>
           </Grid>
           {order.items.map((foodItem, index) => <ItemHistory key={index} item={foodItem} />)}

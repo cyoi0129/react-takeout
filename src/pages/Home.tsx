@@ -3,12 +3,12 @@ import { useAppSelector } from '../store/hooks';
 import { selectFood, foodList } from '../model/Food';
 import { selectShop, shopList } from '../model/Shop';
 import { FoodItem, ShopItem } from '../components';
-import { Container, Typography, makeStyles, createStyles, Theme } from "@material-ui/core";
+import { Container, Typography, makeStyles, createStyles, Theme, Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      paddingTop: 24,
+      paddingTop: 96,
       paddingBottom: 96,
     },
   }),
@@ -21,9 +21,13 @@ const Home: VFC = () => {
   return (
     <Container className={classes.root}>
       <Typography variant="h4" component="h2" gutterBottom>Foods</Typography>
-      {foodSelector? foodSelector.foodList.map((item,index) => <FoodItem key={index} item={item} />):"No food item."}
+      {foodSelector ? foodSelector.foodList.map((item, index) => <FoodItem key={index} item={item} />) : null}
       <Typography variant="h4" component="h2" gutterBottom>Shops</Typography>
-      {shopSelector? shopSelector.shopList.map((shop,index) => <ShopItem key={index} item={shop} /> ):"No available shop."}
+      <Grid container>
+        <Grid item>
+          {shopSelector ? shopSelector.shopList.map((shop, index) => <ShopItem key={index} item={shop} />) : null}
+        </Grid>
+      </Grid>
     </Container>
   );
 };

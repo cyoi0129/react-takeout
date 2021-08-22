@@ -7,7 +7,7 @@ import { Container, Typography, makeStyles, createStyles, Theme } from "@materia
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      paddingTop: 24,
+      paddingTop: 96,
       paddingBottom: 96,
     },
   }),

@@ -4,12 +4,12 @@ import { Redirect } from "react-router-dom";
 import { selectLogin, loginStatus, userData, editUser } from '../model/Login';
 import { getOrderList, selectOrder, orderList } from "../model/Order";
 import { UserInfo, OrderHistory } from "../components";
-import { makeStyles, Theme, Typography, Box, TextField, Button, Container } from '@material-ui/core';
+import { makeStyles, Theme, Typography, Box, TextField, Button, Container, Divider } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
-    paddingTop: 24,
+    paddingTop: 96,
     paddingBottom: 96,
     paddingLeft:16,
     paddingRight: 16,
@@ -22,7 +22,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     width: 160
-  }
+  },
+  border: {
+    marginTop: 32,
+    marginBottom: 32,
+  },
 }));
 
 const Account: VFC = () => {
@@ -87,6 +91,7 @@ const Account: VFC = () => {
               <Box className={classes.item}>
                 <Button className={classes.button} variant="contained" color="primary" onClick={userEditor}>Edit</Button>
               </Box>
+              <Divider variant="middle" className={classes.border} />
               {orderSelector.order.length !== 0 ?
                 <OrderHistory list={orderSelector.order} /> : " No Order History "}
             </>

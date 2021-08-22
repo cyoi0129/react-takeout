@@ -1,4 +1,4 @@
-import { VFC, useState } from "react";
+import { VFC, useState, ChangeEvent, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { changeNavigation } from '../model/Navigator';
@@ -6,13 +6,16 @@ import { loginStatus, selectLogin } from "../model/Login";
 import { selectShop, shopList } from "../model/Shop";
 import { orderFood, selectCart, cartData, addOrderItem, orderItem } from "../model/Order";
 import { CartItem, Loading } from '../components';
-import { makeStyles, createStyles, Theme, Button, Typography, Select, MenuItem, FormControl, Container, Divider } from "@material-ui/core";
+import { makeStyles, createStyles, Theme, Button, Typography, Select, MenuItem, FormControl, Container, Divider, Radio, RadioGroup, FormControlLabel, FormLabel, Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      padding: theme.spacing(2),
+      paddingTop: 96,
+      paddingBottom: 96,
+      paddingLeft: 16,
+      paddingRight: 16,
     },
     formControl: {
       margin: theme.spacing(0),
@@ -26,8 +29,20 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: 24,
     },
     border: {
-      marginTop: 36,
+      marginTop: 32,
     },
+    payment: {
+      marginTop: 32,
+      margintBottom: 16,
+    },
+    selectItem: {
+      marginTop: 16,
+      marginBottom: 16,
+    },
+    selectLabel: {
+      width: 160,
+      paddingTop:8,
+    }
   }),
 );
 
@@ -45,11 +60,21 @@ const Cart: VFC = () => {
   const cartTotal: number = cartSelector.total;
   const classes = useStyles();
   const [shop, setShop] = useState(cartSelector.shop);
+  const [receipt, setReceipt] = useState("");
+  const [payment, setPayment] = useState("shop");
   const [loading, setLoading] = useState(false);
 
   const shopChange = (event: any) => {
     setShop(() => event.target.value);
-  }
+  };
+
+  const receiptChange = (event: any) => {
+    setReceipt(() => event.target.value);
+  };
+
+  const handlePayment = (event: ChangeEvent<HTMLInputElement>) => {
+    setPayment((event.target as HTMLInputElement).value);
+  };
 
   const checkOut = () => {
     let orderTime: string = getNowYMDhmsStr();
@@ -58,6 +83,8 @@ const Cart: VFC = () => {
     const newOrder: orderItem = {
       id: 0,
       time: orderTime,
+      receipt: receipt,
+      payment: payment === "online" ? true : false,
       ready: false,
       user: userID,
       shop: shop,
@@ -91,22 +118,65 @@ const Cart: VFC = () => {
     return dateTime;
   }
 
+
+
+  const selection = () => {
+    const date = new Date();
+    let timeSelection: string[] = [];
+    let currentMinute = Math.floor(date.getMinutes() / 10) + 2;
+    for (let i = 0; i < 10; i++) {
+      currentMinute++;
+      const newMinute: string = ("00" + (currentMinute % 6 * 10)).slice(-2);
+      const newHour: string = ("00" + (date.getHours() + Math.floor(currentMinute / 6))).slice(-2);
+      timeSelection = [...timeSelection, newHour + ':' + newMinute];
+    }
+    return timeSelection;
+  }
+
   return (
     <Container className={classes.root}>
-      <Typography variant="h5" style={{ cursor: 'pointer' }}>
-        <FormControl className={classes.formControl}>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={shop}
-            onChange={shopChange}
-          >
-            {shopList !== [] ? shopList.map((shopItem, index) =>
-              <MenuItem key={index} value={shopItem.id}>{shopItem.name}</MenuItem>
-            ) : <MenuItem value='0'>No available shop</MenuItem>}
-          </Select>
-        </FormControl>
-      </Typography>
+      <Grid container className={classes.selectItem}>
+        <Grid item><Typography variant="body2" className={classes.selectLabel}>Choose a store</Typography></Grid>
+        <Grid item><Typography variant="h5" style={{ cursor: 'pointer' }}>
+          <FormControl className={classes.formControl}>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={shop}
+              onChange={shopChange}
+            >
+              {shopList !== [] ? shopList.map((shopItem, index) =>
+                <MenuItem key={index} value={shopItem.id}>{shopItem.name}</MenuItem>
+              ) : <MenuItem value='0'>No available shop</MenuItem>}
+            </Select>
+          </FormControl>
+        </Typography></Grid>
+      </Grid>
+      <Grid container className={classes.selectItem}>
+        <Grid item><Typography variant="body2" className={classes.selectLabel}>Choose receipt time</Typography></Grid>
+        <Grid item><Typography variant="h5" style={{ cursor: 'pointer' }}>
+          <FormControl className={classes.formControl}>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={receipt}
+              onChange={receiptChange}
+            >
+              {selection().map((receiptTime, index) =>
+                <MenuItem key={index} value={receiptTime}>{receiptTime}</MenuItem>
+              )}
+            </Select>
+          </FormControl>
+        </Typography></Grid>
+      </Grid>
+      <FormControl component="fieldset" className={classes.payment}>
+        <FormLabel component="legend">Payment</FormLabel>
+        <RadioGroup aria-label="payment" name="payment" value={payment} onChange={handlePayment}>
+          <FormControlLabel value="shop" control={<Radio color="primary" />} label="Pay in shop" />
+          <FormControlLabel value="online" control={<Radio color="primary" />} label="Pay online" />
+        </RadioGroup>
+      </FormControl>
+
       {cartItems.length !== 0 ?
         <>
           {cartItems.map((item, index) => <CartItem key={index} item={item} />)}

@@ -10,6 +10,8 @@ export type orderFood = {
 export type orderItem = {
   id: number;
   time: string;
+  receipt: string;
+  payment: boolean;
   ready: boolean;
   user: number;
   shop: number;
@@ -55,6 +57,8 @@ export const addOrderItem = createAsyncThunk(
       body: JSON.stringify({
         ready: targetOrderItem.ready,
         time: targetOrderItem.time,
+        receipt: targetOrderItem.receipt,
+        payment: targetOrderItem.payment,
         user: targetOrderItem.user,
         shop: targetOrderItem.shop,
         total: targetOrderItem.total,

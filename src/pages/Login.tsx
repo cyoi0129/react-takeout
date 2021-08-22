@@ -44,6 +44,8 @@ function a11yProps(index: any) {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
+    paddingTop: 64,
+    paddingBottom: 96,
   },
   item: {
     padding: theme.spacing(2),
