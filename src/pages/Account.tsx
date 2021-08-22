@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   border: {
     marginTop: 32,
     marginBottom: 32,
-  },
+  }
 }));
 
 const Account: VFC = () => {
@@ -34,11 +34,11 @@ const Account: VFC = () => {
   const dispatch = useAppDispatch();
   const loginSelector: loginStatus = useAppSelector(selectLogin);
   const orderSelector: orderList = useAppSelector(selectOrder);
-  const [userName, setUserName] = useState(loginSelector.name);
-  const [userMail, setUserMail] = useState(loginSelector.email);
-  const [userPassword, setUserPassword] = useState(loginSelector.password);
-  const [userID] = useState(loginSelector.id);
-  const [editing, setEditing] = useState(false);
+  const [userName, setUserName] = useState<string>(loginSelector.name);
+  const [userMail, setUserMail] = useState<string>(loginSelector.email);
+  const [userPassword, setUserPassword] = useState<string>(loginSelector.password);
+  const [userID] = useState<number | null>(loginSelector.id);
+  const [editing, setEditing] = useState<boolean>(false);
 
   const userInfo: userData = {
     id: userID,
@@ -89,7 +89,7 @@ const Account: VFC = () => {
             <>
               <UserInfo userData={userInfo} />
               <Box className={classes.item}>
-                <Button className={classes.button} variant="contained" color="primary" onClick={userEditor}>Edit</Button>
+                <Button className={classes.button} variant="contained" color="primary" onClick={userEditor}>Change</Button>
               </Box>
               <Divider variant="middle" className={classes.border} />
               {orderSelector.order.length !== 0 ?

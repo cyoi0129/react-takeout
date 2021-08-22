@@ -60,6 +60,7 @@ function Alert(props: AlertProps) {
 const Cart: VFC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const classes = useStyles();
   const formatter = new Intl.NumberFormat('ja-JP');
   const cartSelector: cartData = useAppSelector(selectCart);
   const loginSelector: loginStatus = useAppSelector(selectLogin);
@@ -69,12 +70,11 @@ const Cart: VFC = () => {
   const userID: number = loginSelector.id ? loginSelector.id : 0;
   const cartItems: orderFood[] = cartSelector.items;
   const cartTotal: number = cartSelector.total;
-  const classes = useStyles();
-  const [shop, setShop] = useState(cartSelector.shop);
-  const [receipt, setReceipt] = useState("ASAP");
-  const [payment, setPayment] = useState("shop");
-  const [loading, setLoading] = useState(false);
-  const [snackBar, setSnackBar] = useState(false);
+  const [shop, setShop] = useState<number>(cartSelector.shop);
+  const [receipt, setReceipt] = useState<string>("ASAP");
+  const [payment, setPayment] = useState<string>("shop");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [snackBar, setSnackBar] = useState<boolean>(false);
 
   const shopChange = (event: any) => {
     setShop(() => event.target.value);
@@ -102,7 +102,6 @@ const Cart: VFC = () => {
       shop: shop,
       total: cartTotal,
       items: cartItems
-
     }
     dispatch(addOrderItem(newOrder));
     setLoading(true);
@@ -160,12 +159,7 @@ const Cart: VFC = () => {
         <Grid item><Typography variant="body2" className={classes.selectLabel}>Choose a store</Typography></Grid>
         <Grid item><Typography variant="h5" style={{ cursor: 'pointer' }}>
           <FormControl className={classes.formControl}>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={shop}
-              onChange={shopChange}
-            >
+            <Select value={shop} onChange={shopChange}>
               {shopList !== [] ? shopList.map((shopItem, index) =>
                 <MenuItem key={index} value={shopItem.id}>{shopItem.name}</MenuItem>
               ) : <MenuItem value='0'>No available shop</MenuItem>}
@@ -177,12 +171,7 @@ const Cart: VFC = () => {
         <Grid item><Typography variant="body2" className={classes.selectLabel}>Choose receipt time</Typography></Grid>
         <Grid item><Typography variant="h5" style={{ cursor: 'pointer' }}>
           <FormControl className={classes.formControl}>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={receipt}
-              onChange={receiptChange}
-            >
+            <Select value={receipt} onChange={receiptChange}>
               {selection().map((receiptTime, index) =>
                 <MenuItem key={index} value={receiptTime}>{receiptTime}</MenuItem>
               )}
@@ -197,7 +186,6 @@ const Cart: VFC = () => {
           <FormControlLabel value="online" control={<Radio color="primary" />} label="Pay online" />
         </RadioGroup>
       </FormControl>
-
       {cartItems.length !== 0 ?
         <>
           {cartItems.map((item, index) => <CartItem key={index} item={item} />)}

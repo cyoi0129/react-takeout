@@ -3,9 +3,9 @@ import { useAppSelector } from '../store/hooks';
 import { selectFood, foodList } from '../model/Food';
 import { selectShop, shopList } from '../model/Shop';
 import { FoodItem, ShopItem } from '../components';
-import { Container, Typography, makeStyles, createStyles, Theme, Grid, Divider } from "@material-ui/core";
+import { Container, Typography, makeStyles, createStyles, Grid, Divider } from "@material-ui/core";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       paddingTop: 96,

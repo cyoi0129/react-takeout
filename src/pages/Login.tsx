@@ -71,18 +71,16 @@ function Alert(props: AlertProps) {
 
 const Login: VFC = () => {
   const history = useHistory();
-  const dispatch = useAppDispatch();
-  const loginStatus = useAppSelector(selectLogin);
   const classes = useStyles();
   const theme = useTheme();
-  const [value, setValue] = useState(0);
-  const [userName, setUserName] = useState('');
-  const [userMail, setUserMail] = useState('');
-  const [userPassword, setUserPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [snackBar, setSnackBar] = useState(false);
-
-  const isLogined: boolean = loginStatus.isLogined;
+  const dispatch = useAppDispatch();
+  const loginStatus = useAppSelector(selectLogin);
+  const [value, setValue] = useState<number>(0);
+  const [userName, setUserName] = useState<string>('');
+  const [userMail, setUserMail] = useState<string>('');
+  const [userPassword, setUserPassword] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [snackBar, setSnackBar] = useState<boolean>(false);
   const isLoginfailed: boolean = loginStatus.isLoginFailed;
 
   const userNameChange = (event: any) => {
@@ -173,7 +171,6 @@ const Login: VFC = () => {
           <Box className={classes.item}>
             <TextField
               className={classes.input}
-              id="standard-password-input"
               label="Password"
               type="password"
               autoComplete="current-password"
@@ -194,7 +191,6 @@ const Login: VFC = () => {
           <Box className={classes.item}>
             <TextField
               className={classes.input}
-              id="standard-password-input"
               label="Password"
               type="password"
               autoComplete="current-password"

@@ -2,9 +2,9 @@ import { VFC } from "react";
 import { useAppSelector } from '../store/hooks';
 import { selectFood, foodList } from '../model/Food';
 import { FoodItem } from '../components';
-import { Container, Typography, makeStyles, createStyles, Theme } from "@material-ui/core";
+import { Container, Typography, makeStyles, createStyles } from "@material-ui/core";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       paddingTop: 96,
