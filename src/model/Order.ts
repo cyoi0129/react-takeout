@@ -94,6 +94,9 @@ const orderSlice = createSlice({
     changeCartShop: (state, action: PayloadAction<number>) => {
       state.cart.shop = action.payload;
     },
+    removeOrderData: (state) => {
+      state.order = [];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getOrderList.fulfilled, (state, action) => {
@@ -116,4 +119,4 @@ const calculateTotal = (cartItems:orderFood[]) => {
 export default orderSlice.reducer;
 export const selectOrder = (state: RootState) => state.order;
 export const selectCart = (state: RootState) => state.order.cart;
-export const { addCartItem, changeCartItem, removeCartItem, changeCartShop } = orderSlice.actions;
+export const { addCartItem, changeCartItem, removeCartItem, changeCartShop, removeOrderData } = orderSlice.actions;

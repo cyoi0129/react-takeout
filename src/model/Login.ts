@@ -82,7 +82,12 @@ const loginSlice = createSlice({
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.password = action.payload.password;
-
+    },
+    removeUserData: (state) => {
+      state.isLogined = false;
+      state.name = "";
+      state.email = "";
+      state.password = "";
     },
   },
   extraReducers: (builder) => {
@@ -111,4 +116,4 @@ const loginSlice = createSlice({
 
 export default loginSlice.reducer;
 export const selectLogin = (state: RootState) => state.login;
-export const { editUserData } = loginSlice.actions;
+export const { editUserData, removeUserData } = loginSlice.actions;
