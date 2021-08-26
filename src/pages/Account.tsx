@@ -1,17 +1,18 @@
-import { VFC, useState, useEffect } from "react";
+import { VFC, useState, useEffect, SyntheticEvent } from "react";
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { Redirect } from "react-router-dom";
 import { selectLogin, loginStatus, userData, editUser } from '../model/Login';
 import { getOrderList, selectOrder, orderList } from "../model/Order";
-import { UserInfo, OrderHistory } from "../components";
-import { makeStyles, Theme, Typography, Box, TextField, Button, Container, Divider } from '@material-ui/core';
+import { UserInfo, OrderHistory, Card, InfoEdit, Loading } from "../components";
+import { makeStyles, Theme, Typography, Box, TextField, Button, Container, Divider, Snackbar } from '@material-ui/core';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.palette.background.paper,
     paddingTop: 96,
     paddingBottom: 96,
-    paddingLeft:16,
+    paddingLeft: 16,
     paddingRight: 16,
   },
   item: {
@@ -26,59 +27,104 @@ const useStyles = makeStyles((theme: Theme) => ({
   border: {
     marginTop: 32,
     marginBottom: 32,
-  }
+  },
+  snackbar: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const Account: VFC = () => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const loginSelector: loginStatus = useAppSelector(selectLogin);
   const orderSelector: orderList = useAppSelector(selectOrder);
+  const [editing, setEditing] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [snackBar, setSnackBar] = useState<boolean>(false);
+
+  // UserData State
   const [userName, setUserName] = useState<string>(loginSelector.name);
   const [userMail, setUserMail] = useState<string>(loginSelector.email);
   const [userPassword, setUserPassword] = useState<string>(loginSelector.password);
-  const [userID] = useState<number | null>(loginSelector.id);
-  const [editing, setEditing] = useState<boolean>(false);
+  const [cardNumber, setCardNumber] = useState<string>(loginSelector.cardNumber);
+  const [cardName, setCardName] = useState<string>(loginSelector.cardName);
+  const [cardExpiry, setCardExpiry] = useState<string>(loginSelector.cardExpiry);
+  const [cardCvc, setCardCvc] = useState<string>(loginSelector.cardCvc);
 
-  const userInfo: userData = {
-    id: userID,
-    name: userName,
-    email: userMail,
-    password: userPassword
+  const userData: userData = {
+    id: loginSelector.id,
+    name: userName === undefined || "" ? "" : userName,
+    email: userMail === undefined || "" ? "" : userMail,
+    password: userPassword === undefined || "" ? "" : userPassword,
+    cardNumber: cardNumber === undefined || "" ? "" : cardNumber,
+    cardName: cardName === undefined || "" ? "" : cardName,
+    cardExpiry: cardExpiry === undefined || "" ? "" : cardExpiry,
+    cardCvc: cardCvc === undefined || "" ? "" : cardCvc
   }
 
-  const userNameChange = (event: any) => {
-    setUserName(() => event.target.value);
-  }
-
-  const userMailChange = (event: any) => {
-    setUserMail(() => event.target.value);
-  }
-
-  const userPasswordChange = (event: any) => {
-    setUserPassword(() => event.target.value);
-  }
-
-  const handleChange = () => {
-    const editUserData: userData = {
-      id: userID,
-      name: userName,
-      email: userMail,
-      password: userPassword
+  const setUserData = (item: string, value: string) => {
+    switch (item) {
+      case 'name':
+        setUserName(value);
+        break;
+      case 'email':
+        setUserMail(value);
+        break;
+      case 'password':
+        setUserPassword(value);
+        break;
+      case 'cardNumber':
+        setCardNumber(value);
+        break;
+      case 'cardName':
+        setCardName(value);
+        break;
+      case 'cardExpriy':
+        setCardExpiry(value);
+        break;
+      case 'cardCvc':
+        setCardCvc(value);
+        break;
+      default:
+        console.log('No item matched!')
     }
-    dispatch(editUser(editUserData));
-    setEditing(() => false);
   }
+
+  const saveUserData = () => {
+    dispatch(editUser(userData));
+    setLoading(true);
+    setTimeout(() => {
+      setSnackBar(true);
+    }, 1000);
+    setTimeout(() => {
+      setLoading(false);
+      setEditing(() => false);
+    }, 2000);
+  }
+
+  useEffect(() => {
+    if (userData.id !== null) {
+      dispatch(getOrderList(userData.id));
+    }
+  }, [])
 
   const userEditor = () => {
     setEditing(() => true);
   }
 
-  useEffect(() => {
-    if (userInfo.id !== null) {
-      dispatch(getOrderList(userInfo.id));
+  const handleClose = (event?: SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
     }
-  }, [])
+    setSnackBar(false);
+  };
 
   return (
     <>
@@ -87,7 +133,7 @@ const Account: VFC = () => {
           <Typography variant="h4" component="h2" gutterBottom>Account Info</Typography>
           {!editing ?
             <>
-              <UserInfo userData={userInfo} />
+              <UserInfo userData={userData} />
               <Box className={classes.item}>
                 <Button className={classes.button} variant="contained" color="primary" onClick={userEditor}>Change</Button>
               </Box>
@@ -97,27 +143,18 @@ const Account: VFC = () => {
             </>
             :
             <>
+              <InfoEdit userData={userData} setUserData={setUserData} />
+              <Card userData={userData} setUserData={setUserData} />
               <Box className={classes.item}>
-                <TextField className={classes.input} required id="standard-required" label="User" value={userName} onChange={userNameChange} />
-              </Box>
-              <Box className={classes.item}>
-                <TextField className={classes.input} required id="standard-required" label="Email" value={userMail} onChange={userMailChange} />
-              </Box>
-              <Box className={classes.item}>
-                <TextField
-                  className={classes.input}
-                  id="standard-password-input"
-                  label="Password"
-                  type="password"
-                  autoComplete="current-password"
-                  value={userPassword}
-                  onChange={userPasswordChange}
-                />
-              </Box>
-              <Box className={classes.item}>
-                <Button className={classes.button} variant="contained" color="primary" onClick={handleChange}>Save</Button>
+                <Button className={classes.button} variant="contained" color="primary" onClick={saveUserData}>Save</Button>
               </Box>
             </>}
+          <Loading show={loading} />
+          <div className={classes.snackbar}>
+            <Snackbar open={snackBar} autoHideDuration={3000} onClose={handleClose}>
+              <Alert severity="success">Update Sucessed!</Alert>
+            </Snackbar>
+          </div>
         </Container>
       }
     </>

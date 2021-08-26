@@ -75,7 +75,7 @@ const FoodItemOrder: FC<Props> = (Props) => {
       setLoading(false);
       dispatch(changeNavigation(3));
       history.push("/cart");
-    }, 2000);
+    }, 1000);
   }
 
   const changeOrder = () => {
@@ -89,7 +89,7 @@ const FoodItemOrder: FC<Props> = (Props) => {
       setLoading(false);
       dispatch(changeNavigation(3));
       history.push("/cart");
-    }, 2000);
+    }, 1000);
   }
 
   return (

@@ -1,21 +1,23 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../store/store";
+import { apiURL } from "../config";
 
-export type loginStatus = {
+export interface userData {
+  id: number | null;
+  name: string;
+  email: string;
+  password: string;
+  cardNumber: string;
+  cardName: string;
+  cardExpiry: string;
+  cardCvc: string;
+}
+
+export interface loginStatus extends userData {
   isLogined: boolean;
   isLoginFailed: boolean;
-  id: number | null;
-  name: string;
-  email: string;
-  password: string;
 };
 
-export type userData = {
-  id: number | null;
-  name: string;
-  email: string;
-  password: string;
-}
 
 const initialState: loginStatus = {
   isLogined: false,
@@ -23,20 +25,28 @@ const initialState: loginStatus = {
   id: null,
   name: "",
   email: "",
-  password: ""
+  password: "",
+  cardNumber: "",
+  cardName: "",
+  cardExpiry: "",
+  cardCvc: "",
 };
 
 const failedLoginUser: userData = {
   id: 0,
   name: "",
   email: "",
-  password: ""
+  password: "",
+  cardNumber: "",
+  cardName: "",
+  cardExpiry: "",
+  cardCvc: "",
 }
 
 export const getUserData = createAsyncThunk(
   "login/getUserData",
   async (requestUserName: string) => {
-    const url = "https://my-json-server.typicode.com/cyoi0129/json-server/user";
+    const url = apiURL + "user";
     const response = await fetch(url).then((res) => res.json());
     const targetUser = response.find((item: userData) => item.name === requestUserName);
     const resultUser = targetUser ? targetUser : failedLoginUser;
@@ -47,12 +57,16 @@ export const getUserData = createAsyncThunk(
 export const createNewUser = createAsyncThunk(
   "login/createNewUser",
   async (newUserData: userData) => {
-    const response = await fetch('https://my-json-server.typicode.com/cyoi0129/json-server/user', {
+    const response = await fetch(apiURL + "user", {
       method: 'POST',
       body: JSON.stringify({
         name: newUserData.name,
         email: newUserData.email,
-        password: newUserData.password
+        password: newUserData.password,
+        cardNumber: newUserData.cardNumber,
+        cardName: newUserData.cardName,
+        cardExpiry: newUserData.cardExpiry,
+        cardCvc: newUserData.cardCvc,
       }),
       headers: new Headers({ 'Content-type': 'application/json' })
 
@@ -64,7 +78,7 @@ export const createNewUser = createAsyncThunk(
 export const editUser = createAsyncThunk(
   "login/editUser",
   async (editUserData: userData) => {
-    await fetch(`https://my-json-server.typicode.com/cyoi0129/json-server/user/${editUserData.id}`, {
+    await fetch(`${apiURL}user/${editUserData.id}`, {
       method: 'PUT',
       body: JSON.stringify(editUserData),
       headers: new Headers({ 'Content-type': 'application/json' })
@@ -78,16 +92,18 @@ const loginSlice = createSlice({
   initialState: initialState,
   reducers: {
     editUserData: (state, action: PayloadAction<userData>) => {
-      state.isLogined = true;
-      state.name = action.payload.name;
-      state.email = action.payload.email;
-      state.password = action.payload.password;
+      const newState = {isLogined: true, isLoginFailed: false}
+      state = Object.assign(newState, action.payload);
     },
     removeUserData: (state) => {
       state.isLogined = false;
       state.name = "";
       state.email = "";
       state.password = "";
+      state.cardNumber = "";
+      state.cardName = "";
+      state.cardExpiry = "";
+      state.cardCvc = "";
     },
   },
   extraReducers: (builder) => {
@@ -102,14 +118,23 @@ const loginSlice = createSlice({
         state.name = action.payload.name;
         state.email = action.payload.email;
         state.password = action.payload.password;
+        state.cardNumber = action.payload.cardNumber;
+        state.cardName = action.payload.cardName;
+        state.cardExpiry = action.payload.cardExpiry;
+        state.cardCvc = action.payload.cardCvc;
       }
     });
     builder.addCase(createNewUser.fulfilled, (state, action) => {
       state.isLogined = true;
+      state.isLoginFailed = false;
       state.id = action.payload.id;
       state.name = action.payload.name;
       state.email = action.payload.email;
       state.password = action.payload.password;
+      state.cardNumber = action.payload.cardNumber;
+      state.cardName = action.payload.cardName;
+      state.cardExpiry = action.payload.cardExpiry;
+      state.cardCvc = action.payload.cardCvc;
     });
   }
 });

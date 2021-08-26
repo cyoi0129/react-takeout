@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../store/store";
+import { apiURL } from "../config";
 
 export type shopItem = {
   id: number,
@@ -21,7 +22,7 @@ const initialState: shopList = {
 export const getShopList = createAsyncThunk(
   "shop/getShopList",
   async () => {
-    const url = "https://my-json-server.typicode.com/cyoi0129/json-server/shop";
+    const url = apiURL + "shop";
     const response = await fetch(url).then((res) => res.json());
     return response;
   }

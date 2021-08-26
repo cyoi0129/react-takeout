@@ -1,7 +1,7 @@
 import { VFC, FC } from "react";
 import { shopItem } from "../model/Shop";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { mapkey } from "../key/mapkey";
+import { mapKey } from "../config";
 
 export type Props = {
   item: shopItem;
@@ -20,7 +20,7 @@ const MapObject: FC<Props> = (Props) => {
   };
 
   return (
-    <LoadScript googleMapsApiKey={mapkey}>
+    <LoadScript googleMapsApiKey={mapKey}>
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}

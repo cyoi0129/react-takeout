@@ -9,4 +9,6 @@ export { default as UserInfo } from "./UserInfo";
 export { default as MapItem } from "./MapItem";
 export { default as ShopItem } from "./ShopItem";
 export { default as Loading } from "./Loading";
+export { default as Card } from "./Card";
+export { default as InfoEdit } from "./InfoEdit";
 export { default as ScrollToTop} from "./ScrollToTop";

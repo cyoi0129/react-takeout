@@ -101,7 +101,7 @@ const Header: VFC = () => {
       </div>
       <Loading show={loading} />
       <div className={classes.snackbar}>
-        <Snackbar open={snackBar} autoHideDuration={6000} onClose={handleClose}>
+        <Snackbar open={snackBar} autoHideDuration={3000} onClose={handleClose}>
           <Alert severity="success">Logout Sucessed!</Alert>
         </Snackbar>
       </div>

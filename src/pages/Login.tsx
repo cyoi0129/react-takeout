@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { getUserData, userData, createNewUser, selectLogin } from "../model/Login";
 import { changeNavigation } from '../model/Navigator';
 import SwipeableViews from 'react-swipeable-views';
-import { Loading } from '../components';
+import { Loading, InfoEdit, Card } from '../components';
 import { makeStyles, Theme, useTheme, AppBar, Tabs, Tab, Typography, Box, TextField, Button, Snackbar } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 
@@ -75,34 +75,61 @@ const Login: VFC = () => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const loginStatus = useAppSelector(selectLogin);
-  const [value, setValue] = useState<number>(0);
+  const [tab, setTab] = useState<number>(0);
+
+  // UserData State
   const [userName, setUserName] = useState<string>('');
   const [userMail, setUserMail] = useState<string>('');
   const [userPassword, setUserPassword] = useState<string>('');
+  const [cardNumber, setCardNumber] = useState<string>('');
+  const [cardName, setCardName] = useState<string>('');
+  const [cardExpiry, setCardExpiry] = useState<string>('');
+  const [cardCvc, setCardCvc] = useState<string>('');
+
+
   const [loading, setLoading] = useState<boolean>(false);
   const [snackBar, setSnackBar] = useState<boolean>(false);
   const isLoginfailed: boolean = loginStatus.isLoginFailed;
 
-  const userNameChange = (event: any) => {
-    setUserName(() => event.target.value);
+  const userData: userData = {
+    id: null,
+    name: userName,
+    email: userMail,
+    password: userPassword,
+    cardNumber: cardNumber,
+    cardName: cardName,
+    cardExpiry: cardExpiry,
+    cardCvc: cardCvc,
   }
 
-  const userMailChange = (event: any) => {
-    setUserMail(() => event.target.value);
+  const setUserData = (item: string, value: string) => {
+    switch (item) {
+      case 'name':
+        setUserName(value);
+        break;
+      case 'email':
+        setUserMail(value);
+        break;
+      case 'password':
+        setUserPassword(value);
+        break;
+      case 'cardNumber':
+        setCardNumber(value);
+        break;
+      case 'cardName':
+        setCardName(value);
+        break;
+      case 'cardExpriy':
+        setCardExpiry(value);
+        break;
+      case 'cardCvc':
+        setCardCvc(value);
+        break;
+      default:
+        console.log('No item matched!')
+    }
   }
-
-  const userPasswordChange = (event: any) => {
-    setUserPassword(() => event.target.value);
-  }
-
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
-  };
-
-  const handleChangeIndex = (index: number) => {
-    setValue(index);
-  };
-
+  // API async methods
   const handleLogin = () => {
     dispatch(getUserData(userName));
     setLoading(true);
@@ -117,13 +144,7 @@ const Login: VFC = () => {
   }
 
   const handleSignUp = () => {
-    const newUserData: userData = {
-      id: null,
-      name: userName,
-      email: userMail,
-      password: userPassword
-    }
-    dispatch(createNewUser(newUserData));
+    dispatch(createNewUser(userData));
     setLoading(true);
     setTimeout(() => {
       setSnackBar(true);
@@ -134,6 +155,15 @@ const Login: VFC = () => {
       history.push("/");
     }, 2000);
   }
+
+  // Design usage methods
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setTab(newValue);
+  };
+
+  const handleChangeIndex = (index: number) => {
+    setTab(index);
+  };
 
   const handleClose = (event?: SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
@@ -146,7 +176,7 @@ const Login: VFC = () => {
     <div className={classes.root}>
       <AppBar position="static" color="default">
         <Tabs
-          value={value}
+          value={tab}
           onChange={handleChange}
           indicatorColor="primary"
           textColor="primary"
@@ -159,14 +189,14 @@ const Login: VFC = () => {
       </AppBar>
       <SwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={value}
+        index={tab}
         onChangeIndex={handleChangeIndex}
       >
-        <TabPanel value={value} index={0} dir={theme.direction}>
+        <TabPanel value={tab} index={0} dir={theme.direction}>
           <Typography variant="h4" component="h2" gutterBottom>Login</Typography>
           {isLoginfailed ? <Typography variant="body2" color="secondary" gutterBottom>Invalid user name or password.</Typography> : null}
           <Box className={classes.item}>
-            <TextField className={classes.input} required id="standard-required" label="User" value={userName} helperText="Use [User: tester1, Password: tester1] for trial" onChange={userNameChange} />
+            <TextField className={classes.input} required id="standard-required" label="User" value={userName} helperText="Use [User: tester1, Password: tester1] for trial" name="nameTest" onChange={(event) => setUserName(event.target.value)} />
           </Box>
           <Box className={classes.item}>
             <TextField
@@ -180,24 +210,10 @@ const Login: VFC = () => {
             <Button className={classes.button} variant="contained" color="primary" onClick={handleLogin}>Login</Button>
           </Box>
         </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
+        <TabPanel value={tab} index={1} dir={theme.direction}>
           <Typography variant="h4" component="h2" gutterBottom>Sign Up</Typography>
-          <Box className={classes.item}>
-            <TextField className={classes.input} required id="standard-required" label="User" value={userName} onChange={userNameChange} />
-          </Box>
-          <Box className={classes.item}>
-            <TextField className={classes.input} required id="standard-required" label="Email" value={userMail} onChange={userMailChange} />
-          </Box>
-          <Box className={classes.item}>
-            <TextField
-              className={classes.input}
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-              value={userPassword}
-              onChange={userPasswordChange}
-            />
-          </Box>
+          <InfoEdit userData={userData} setUserData={setUserData} />
+          <Card userData={userData} setUserData={setUserData} />
           <Box className={classes.item}>
             <Button className={classes.button} variant="contained" color="primary" onClick={handleSignUp}>Sign Up</Button>
           </Box>
@@ -205,7 +221,7 @@ const Login: VFC = () => {
       </SwipeableViews>
       <Loading show={loading} />
       <div className={classes.snackbar}>
-        <Snackbar open={snackBar} autoHideDuration={6000} onClose={handleClose}>
+        <Snackbar open={snackBar} autoHideDuration={3000} onClose={handleClose}>
           {isLoginfailed ? <Alert severity="error">Login Failed!</Alert> : <Alert severity="success">Login(Sign up) Sucessed!</Alert>
           }
         </Snackbar>

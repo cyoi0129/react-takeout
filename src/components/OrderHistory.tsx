@@ -82,7 +82,7 @@ const OrderHistroy: FC<Props> = (Props) => {
               Status: {order.ready ? "Ready" : "Cooking"}
             </Grid>
             <Grid item>
-              Receipt: {order.receipt}
+              Pickup: {order.pickup}
             </Grid>
             <Grid item>
               Shop: {getShopName(order.shop)}

@@ -36,6 +36,14 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: 32,
       margintBottom: 16,
     },
+    paymentInfo: {
+      marginTop: 8,
+      marginLeft: 16,
+    },
+    paymentButton: {
+      marginTop: 16,
+      width: 240,
+    },
     selectItem: {
       marginTop: 16,
       marginBottom: 16,
@@ -68,10 +76,11 @@ const Cart: VFC = () => {
   const shopList = shopSelector.shopList;
   const loginStatus = loginSelector.isLogined;
   const userID: number = loginSelector.id ? loginSelector.id : 0;
+  const paymentInfo: string = loginSelector.cardNumber;
   const cartItems: orderFood[] = cartSelector.items;
   const cartTotal: number = cartSelector.total;
   const [shop, setShop] = useState<number>(cartSelector.shop);
-  const [receipt, setReceipt] = useState<string>("ASAP");
+  const [pickup, setPickup] = useState<string>("ASAP");
   const [payment, setPayment] = useState<string>("shop");
   const [loading, setLoading] = useState<boolean>(false);
   const [snackBar, setSnackBar] = useState<boolean>(false);
@@ -80,8 +89,8 @@ const Cart: VFC = () => {
     setShop(() => event.target.value);
   };
 
-  const receiptChange = (event: any) => {
-    setReceipt(() => event.target.value);
+  const pickupChange = (event: any) => {
+    setPickup(() => event.target.value);
   };
 
   const handlePayment = (event: ChangeEvent<HTMLInputElement>) => {
@@ -95,7 +104,7 @@ const Cart: VFC = () => {
     const newOrder: orderItem = {
       id: 0,
       time: orderTime,
-      receipt: receipt,
+      pickup: pickup,
       payment: payment === "online" ? true : false,
       ready: false,
       user: userID,
@@ -127,6 +136,11 @@ const Cart: VFC = () => {
     history.push("/login");
   }
 
+  const goToAccount = () => {
+    dispatch(changeNavigation(1));
+    history.push("/account");
+  }
+
   const getNowYMDhmsStr = () => {
     const date = new Date();
     const Y: string = String(date.getFullYear());
@@ -145,9 +159,13 @@ const Cart: VFC = () => {
     let currentMinute = Math.floor(date.getMinutes() / 10) + 2;
     for (let i = 0; i < 10; i++) {
       currentMinute++;
-      const newMinute: string = ("00" + (currentMinute % 6 * 10)).slice(-2);
-      const newHour: string = ("00" + (date.getHours() + Math.floor(currentMinute / 6))).slice(-2);
-      timeSelection = [...timeSelection, newHour + ':' + newMinute];
+      const tempMinute: number = currentMinute % 6 * 10;
+      const tempHour: number = date.getHours() + Math.floor(currentMinute / 6);
+      if ( (tempHour === 22 && tempMinute === 0) || (tempHour > 10 && tempHour < 22) ) {
+        const newMinute: string = ("00" + tempMinute).slice(-2);
+        const newHour: string = ("00" + tempHour).slice(-2);
+        timeSelection = [...timeSelection, newHour + ':' + newMinute];
+      }
     }
     return timeSelection;
   }
@@ -168,12 +186,12 @@ const Cart: VFC = () => {
         </Typography></Grid>
       </Grid>
       <Grid container className={classes.selectItem}>
-        <Grid item><Typography variant="body2" className={classes.selectLabel}>Choose receipt time</Typography></Grid>
+        <Grid item><Typography variant="body2" className={classes.selectLabel}>Choose pickup time</Typography></Grid>
         <Grid item><Typography variant="h5" style={{ cursor: 'pointer' }}>
           <FormControl className={classes.formControl}>
-            <Select value={receipt} onChange={receiptChange}>
-              {selection().map((receiptTime, index) =>
-                <MenuItem key={index} value={receiptTime}>{receiptTime}</MenuItem>
+            <Select value={pickup} onChange={pickupChange}>
+              {selection().map((pickupTime, index) =>
+                <MenuItem key={index} value={pickupTime}>{pickupTime}</MenuItem>
               )}
             </Select>
           </FormControl>
@@ -186,6 +204,20 @@ const Cart: VFC = () => {
           <FormControlLabel value="online" control={<Radio color="primary" />} label="Pay online" />
         </RadioGroup>
       </FormControl>
+      {payment === "online" ?
+        paymentInfo === "" ? 
+          <div className={classes.paymentInfo}>
+            <Typography variant="body2">No available payment method</Typography>
+            <Button className={classes.paymentButton} variant="contained" color="secondary" onClick={goToAccount}>Add a payment method</Button>
+          </div>
+          :
+          <div className={classes.paymentInfo}>
+            <Typography variant="body2">Card: {paymentInfo.slice(0,12) + "xxxx"}</Typography>
+          </div>
+        :
+        null
+      }
+
       {cartItems.length !== 0 ?
         <>
           {cartItems.map((item, index) => <CartItem key={index} item={item} />)}
@@ -193,11 +225,11 @@ const Cart: VFC = () => {
         </>
         : null}
       <Typography className={classes.total} variant="h5">{`Total: ¥${formatter.format(cartTotal)}`}</Typography>
-      {loginStatus && cartItems.length !== 0 ? <Button className={classes.button} variant="contained" color="primary" onClick={checkOut}>Order</Button> : null}
+      {loginStatus ? <Button className={classes.button} variant="contained" color="primary" onClick={checkOut} disabled={cartItems.length === 0 || (payment === "online" && paymentInfo === "")}>Order</Button> : null}
       {!loginStatus ? <Button className={classes.button} variant="contained" color="primary" onClick={goToLogin}>Login</Button> : null}
       <Loading show={loading} />
       <div className={classes.snackbar}>
-        <Snackbar open={snackBar} autoHideDuration={6000} onClose={handleClose}>
+        <Snackbar open={snackBar} autoHideDuration={3000} onClose={handleClose}>
           <Alert severity="success">Order Sucessed!</Alert>
         </Snackbar>
       </div>

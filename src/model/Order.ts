@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../store/store";
 import { foodItem } from "./Food";
+import { apiURL } from "../config";
 
 export type orderFood = {
   item: foodItem;
@@ -10,7 +11,7 @@ export type orderFood = {
 export type orderItem = {
   id: number;
   time: string;
-  receipt: string;
+  pickup: string;
   payment: boolean;
   ready: boolean;
   user: number;
@@ -42,7 +43,7 @@ const initialState: orderList = {
 export const getOrderList = createAsyncThunk(
   "order/getOrderList",
   async (targetUserID: number) => {
-    const url = "https://my-json-server.typicode.com/cyoi0129/json-server/order";
+    const url = apiURL + "order";
     const response = await fetch(url).then((res) => res.json());
     const targetOrderList = response.filter((item: orderItem) => item.user === targetUserID);
     return targetOrderList;
@@ -52,12 +53,12 @@ export const getOrderList = createAsyncThunk(
 export const addOrderItem = createAsyncThunk(
   "order/addOrderItem",
   async (targetOrderItem: orderItem) => {
-    const response = await fetch('https://my-json-server.typicode.com/cyoi0129/json-server/order', {
+    const response = await fetch(apiURL + "order", {
       method: 'POST',
       body: JSON.stringify({
         ready: targetOrderItem.ready,
         time: targetOrderItem.time,
-        receipt: targetOrderItem.receipt,
+        pickup: targetOrderItem.pickup,
         payment: targetOrderItem.payment,
         user: targetOrderItem.user,
         shop: targetOrderItem.shop,
