@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   formItem: {
     marginTop: 16,
     padding: 8,
+    fontSize: 16,
   },
 }));
 
