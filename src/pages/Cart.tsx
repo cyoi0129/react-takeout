@@ -244,7 +244,7 @@ const Cart: VFC = () => {
         </>
         : null}
       <Typography className={classes.total} variant="h5">{`Total: ¥${formatter.format(cartTotal)}`}</Typography>
-      {loginStatus ? <Button className={classes.button} variant="contained" color="primary" onClick={checkOut} disabled={cartItems.length === 0 || (payment === "online" && paymentInfo === "")}>Order</Button> : null}
+      {loginStatus ? <Button className={classes.button} variant="contained" color="primary" onClick={checkOut} disabled={cartItems.length === 0 || (payment === "online" && paymentInfo === "") || pickup === "Not available"}>Order</Button> : null}
       {!loginStatus ? <Button className={classes.button} variant="contained" color="primary" onClick={goToLogin}>Login</Button> : null}
       <Loading show={loading} />
       <div className={classes.snackbar}>
