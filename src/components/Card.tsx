@@ -1,4 +1,4 @@
-import { FC, useRef, useEffect, useState } from "react";
+import { FC, useRef, useEffect, useState, useCallback } from "react";
 import { userData } from '../model/Login';
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
@@ -8,6 +8,8 @@ export type Props = {
   userData: userData;
   setUserData: any;
 }
+
+export type FOCUS_TYPE = 'number' | 'cvc' | 'expiration' | 'name';
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -29,19 +31,20 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Card: FC<Props> = (Props) => {
   const classes = useStyles();
   const { userData, setUserData } = Props;
-  const [focus, setFocus] = useState("");
-
   const changeUserData = (item: string, value: string) => {
     setUserData(item, value);
   }
 
-  const ref = useRef(null);
+  const [focus, setFocus] = useState<"number"|"name"|"expiry"|"cvc">("number");
+
+  const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (ref.current!==null) {
-      // ref.current.focus();
+    const target = ref.current;
+    if (target){
+      target.focus();
     }
-  }, [])
+  }, []);
 
   return (
     <Box className={classes.card}>
@@ -50,7 +53,7 @@ const Card: FC<Props> = (Props) => {
         name={userData.cardName}
         expiry={userData.cardExpiry}
         cvc={userData.cardCvc}
-        // focused={focus}
+        focused={focus}
       />
       <form className={classes.form}>
         <input
@@ -61,7 +64,7 @@ const Card: FC<Props> = (Props) => {
           placeholder="Card Number"
           value={userData.cardNumber}
           onChange={(e) => changeUserData('cardNumber', e.target.value)}
-          onFocus={(e) => setFocus(e.target.name)}
+          onFocus={() => setFocus("number")}
           ref={ref}
         />
         <input
@@ -72,7 +75,7 @@ const Card: FC<Props> = (Props) => {
           placeholder="Name"
           value={userData.cardName}
           onChange={(e) => changeUserData('cardName', e.target.value)}
-          onFocus={(e) => setFocus(e.target.name)}
+          onFocus={() => setFocus("name")}
         />
         <input
           className={classes.formItem}
@@ -82,7 +85,7 @@ const Card: FC<Props> = (Props) => {
           placeholder="MM/YY"
           value={userData.cardExpiry}
           onChange={(e) => changeUserData('cardExpriy', e.target.value)}
-          onFocus={(e) => setFocus(e.target.name)}
+          onFocus={() => setFocus("expiry")}
         />
         <input
           className={classes.formItem}
@@ -92,7 +95,7 @@ const Card: FC<Props> = (Props) => {
           placeholder="CVC"
           value={userData.cardCvc}
           onChange={(e) => changeUserData('cardCvc', e.target.value)}
-          onFocus={(e) => setFocus(e.target.name)}
+          onFocus={() => setFocus("cvc")}
         />
       </form>
     </Box>
