@@ -1,4 +1,4 @@
-import { VFC, useState, ChangeEvent, SyntheticEvent } from "react";
+import { VFC, useState, useEffect, ChangeEvent, SyntheticEvent } from "react";
 import { useHistory } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { changeNavigation } from '../model/Navigator';
@@ -153,15 +153,27 @@ const Cart: VFC = () => {
     return dateTime;
   }
 
-  const selection = () => {
+  const getCurrentTime = () => {
     const date = new Date();
-    let timeSelection: string[] = ['ASAP'];
-    let currentMinute = Math.floor(date.getMinutes() / 10) + 2;
+    const currentHour: number = date.getHours();
+    const currentMinute: number = date.getMinutes();
+    const currentTime = {
+      h: currentHour,
+      m: currentMinute
+    }
+    return currentTime;
+  }
+
+  const selection = () => {
+    const currentTime = getCurrentTime();
+    let startMinute = Math.floor(currentTime.m / 10) + 2;
+    const outOrder: boolean = (currentTime.h < 8) || (currentTime.h > 21) || (currentTime.h > 20 && currentTime.m > 40) || (currentTime.h < 9 && currentTime.m < 10);
+    let timeSelection: string[] = outOrder ? ['Not available'] : ['ASAP'];
     for (let i = 0; i < 10; i++) {
-      currentMinute++;
-      const tempMinute: number = currentMinute % 6 * 10;
-      const tempHour: number = date.getHours() + Math.floor(currentMinute / 6);
-      if ( (tempHour === 22 && tempMinute === 0) || (tempHour > 10 && tempHour < 22) ) {
+      startMinute++;
+      const tempMinute: number = startMinute % 6 * 10;
+      const tempHour: number = currentTime.h + Math.floor(startMinute / 6);
+      if ((tempHour === 22 && tempMinute === 0) || (tempHour > 10 && tempHour < 22)) {
         const newMinute: string = ("00" + tempMinute).slice(-2);
         const newHour: string = ("00" + tempHour).slice(-2);
         timeSelection = [...timeSelection, newHour + ':' + newMinute];
@@ -169,6 +181,13 @@ const Cart: VFC = () => {
     }
     return timeSelection;
   }
+
+  useEffect(() => {
+    const currentTime = getCurrentTime();
+    if ((currentTime.h < 8) || (currentTime.h > 21) || (currentTime.h > 20 && currentTime.m > 40) || (currentTime.h < 9 && currentTime.m < 10)) {
+      setPickup(() => "Not available")
+    }
+  }, [])
 
   return (
     <Container className={classes.root}>
@@ -205,14 +224,14 @@ const Cart: VFC = () => {
         </RadioGroup>
       </FormControl>
       {payment === "online" ?
-        paymentInfo === "" ? 
+        paymentInfo === "" ?
           <div className={classes.paymentInfo}>
             <Typography variant="body2">No available payment method</Typography>
             <Button className={classes.paymentButton} variant="contained" color="secondary" onClick={goToAccount}>Add a payment method</Button>
           </div>
           :
           <div className={classes.paymentInfo}>
-            <Typography variant="body2">Card: {paymentInfo.slice(0,12) + "xxxx"}</Typography>
+            <Typography variant="body2">Card: {paymentInfo.slice(0, 12) + "xxxx"}</Typography>
           </div>
         :
         null

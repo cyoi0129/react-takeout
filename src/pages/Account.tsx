@@ -22,7 +22,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 300
   },
   button: {
-    width: 160
+    width: 140,
+    marginLeft: 10,
+    marginRight: 10,
   },
   border: {
     marginTop: 32,
@@ -135,17 +137,18 @@ const Account: VFC = () => {
             <>
               <UserInfo userData={userData} />
               <Box className={classes.item}>
-                <Button className={classes.button} variant="contained" color="primary" onClick={userEditor}>Change</Button>
+                <Button className={classes.button} variant="contained" color="primary" onClick={() => setEditing(true)}>Change</Button>
               </Box>
               <Divider variant="middle" className={classes.border} />
               {orderSelector.order.length !== 0 ?
-                <OrderHistory list={orderSelector.order} /> : " No Order History "}
+                <OrderHistory list={orderSelector.order} /> : <Typography variant="body2">No Order History</Typography>}
             </>
             :
             <>
               <InfoEdit userData={userData} setUserData={setUserData} />
               <Card userData={userData} setUserData={setUserData} />
               <Box className={classes.item}>
+                <Button className={classes.button} onClick={() => setEditing(false)}>Cancel</Button>
                 <Button className={classes.button} variant="contained" color="primary" onClick={saveUserData}>Save</Button>
               </Box>
             </>}
