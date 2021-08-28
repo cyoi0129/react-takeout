@@ -4,7 +4,8 @@ import { Redirect } from "react-router-dom";
 import { selectLogin, loginStatus, userData, editUser } from '../model/Login';
 import { getOrderList, selectOrder, orderList } from "../model/Order";
 import { UserInfo, OrderHistory, Card, InfoEdit, Loading } from "../components";
-import { makeStyles, Theme, Typography, Box, TextField, Button, Container, Divider, Snackbar } from '@material-ui/core';
+import { makeStyles, Theme, Typography, Box, Checkbox, Button, Container, Divider, Snackbar, FormControlLabel } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(2),
     },
   },
+  payment: {
+    marginLeft: 0,
+  }
 }));
 
 function Alert(props: AlertProps) {
@@ -49,6 +53,7 @@ const Account: VFC = () => {
   const [editing, setEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [snackBar, setSnackBar] = useState<boolean>(false);
+  const [showPayment, setShowPayment] = useState<boolean>(false);
 
   // UserData State
   const [userName, setUserName] = useState<string>(loginSelector.name);
@@ -145,7 +150,19 @@ const Account: VFC = () => {
             :
             <>
               <InfoEdit userData={userData} setUserData={setUserData} />
-              <Card userData={userData} setUserData={setUserData} />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showPayment}
+                    onChange={() => setShowPayment(!showPayment)}
+                    name="payment"
+                    color="primary"
+                  />
+                }
+                label="Edit Payment Info"
+                className={classes.payment}
+              />
+              {showPayment ? <Card userData={userData} setUserData={setUserData} /> : null}
               <Box className={classes.item}>
                 <Button className={classes.button} onClick={() => setEditing(false)}>Cancel</Button>
                 <Button className={classes.button} variant="contained" color="primary" onClick={saveUserData}>Save</Button>

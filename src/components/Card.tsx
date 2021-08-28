@@ -2,14 +2,12 @@ import { FC, useRef, useEffect, useState, useCallback } from "react";
 import { userData } from '../model/Login';
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
-import { makeStyles, Theme, Box } from '@material-ui/core';
+import { makeStyles, Theme, Box, Typography } from '@material-ui/core';
 
 export type Props = {
   userData: userData;
   setUserData: any;
 }
-
-export type FOCUS_TYPE = 'number' | 'cvc' | 'expiration' | 'name';
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -35,13 +33,13 @@ const Card: FC<Props> = (Props) => {
     setUserData(item, value);
   }
 
-  const [focus, setFocus] = useState<"number"|"name"|"expiry"|"cvc">("number");
+  const [focus, setFocus] = useState<"number" | "name" | "expiry" | "cvc">("number");
 
   const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const target = ref.current;
-    if (target){
+    if (target) {
       target.focus();
     }
   }, []);

@@ -5,8 +5,10 @@ import { getUserData, userData, createNewUser, selectLogin } from "../model/Logi
 import { changeNavigation } from '../model/Navigator';
 import SwipeableViews from 'react-swipeable-views';
 import { Loading, InfoEdit, Card } from '../components';
-import { makeStyles, Theme, useTheme, AppBar, Tabs, Tab, Typography, Box, TextField, Button, Snackbar } from '@material-ui/core';
+import { makeStyles, Theme, useTheme, AppBar, Tabs, Tab, Typography, Box, TextField, Button, Snackbar, FormControlLabel, Checkbox } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -63,6 +65,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(2),
     },
   },
+  payment: {
+    marginLeft: 0,
+  }
 }));
 
 function Alert(props: AlertProps) {
@@ -86,7 +91,7 @@ const Login: VFC = () => {
   const [cardExpiry, setCardExpiry] = useState<string>('');
   const [cardCvc, setCardCvc] = useState<string>('');
 
-
+  const [showPayment, setShowPayment] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [snackBar, setSnackBar] = useState<boolean>(false);
   const isLoginfailed: boolean = loginStatus.isLoginFailed;
@@ -163,6 +168,7 @@ const Login: VFC = () => {
 
   const handleChangeIndex = (index: number) => {
     setTab(index);
+    console.log(index);
   };
 
   const handleClose = (event?: SyntheticEvent, reason?: string) => {
@@ -213,7 +219,19 @@ const Login: VFC = () => {
         <TabPanel value={tab} index={1} dir={theme.direction}>
           <Typography variant="h4" component="h2" gutterBottom>Sign Up</Typography>
           <InfoEdit userData={userData} setUserData={setUserData} />
-          <Card userData={userData} setUserData={setUserData} />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={showPayment}
+                onChange={() => setShowPayment(!showPayment)}
+                name="payment"
+                color="primary"
+              />
+            }
+            label="Add Payment Info"
+            className={classes.payment}
+          />
+          {showPayment ? <Card userData={userData} setUserData={setUserData} /> : null}
           <Box className={classes.item}>
             <Button className={classes.button} variant="contained" color="primary" onClick={handleSignUp}>Sign Up</Button>
           </Box>
