@@ -1,4 +1,4 @@
-import { VFC, FC } from "react";
+import { FC } from "react";
 import { shopItem } from "../model/Shop";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { mapKey } from "../config";

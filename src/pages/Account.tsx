@@ -5,7 +5,6 @@ import { selectLogin, loginStatus, userData, editUser } from '../model/Login';
 import { getOrderList, selectOrder, orderList } from "../model/Order";
 import { UserInfo, OrderHistory, Card, InfoEdit, Loading } from "../components";
 import { makeStyles, Theme, Typography, Box, Checkbox, Button, Container, Divider, Snackbar, FormControlLabel } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -119,11 +118,7 @@ const Account: VFC = () => {
     if (userData.id !== null) {
       dispatch(getOrderList(userData.id));
     }
-  }, [])
-
-  const userEditor = () => {
-    setEditing(() => true);
-  }
+  }, [userData.id, dispatch])
 
   const handleClose = (event?: SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {

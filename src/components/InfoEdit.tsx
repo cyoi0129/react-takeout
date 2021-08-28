@@ -1,6 +1,6 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { userData } from '../model/Login';
-import { createStyles, Theme, makeStyles, List, ListItem, ListItemText, ListItemAvatar, Avatar, Box, TextField } from '@material-ui/core';
+import { createStyles, Theme, makeStyles, Box, TextField } from '@material-ui/core';
 
 export type Props = {
   userData: userData;

@@ -33,7 +33,7 @@ const Footer: VFC = () => {
 
   return (
     <BottomNavigation
-      value={currentPage}
+      value={index}
       onChange={(event, newIndex) => {
         setIndex(newIndex);
         dispatch(changeNavigation(newIndex));

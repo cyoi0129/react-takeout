@@ -6,7 +6,6 @@ import { changeNavigation } from '../model/Navigator';
 import SwipeableViews from 'react-swipeable-views';
 import { Loading, InfoEdit, Card } from '../components';
 import { makeStyles, Theme, useTheme, AppBar, Tabs, Tab, Typography, Box, TextField, Button, Snackbar, FormControlLabel, Checkbox } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 
 

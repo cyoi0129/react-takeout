@@ -1,8 +1,8 @@
-import { FC, useRef, useEffect, useState, useCallback } from "react";
+import { FC, useRef, useEffect, useState } from "react";
 import { userData } from '../model/Login';
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
-import { makeStyles, Theme, Box, Typography } from '@material-ui/core';
+import { makeStyles, Theme, Box } from '@material-ui/core';
 
 export type Props = {
   userData: userData;

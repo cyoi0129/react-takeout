@@ -1,5 +1,5 @@
-import { VFC, useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from './store/hooks';
+import { VFC, useEffect } from "react";
+import { useAppDispatch } from './store/hooks';
 import { getFoodList } from './model/Food';
 import { getShopList } from './model/Shop';
 import { Switch, Route } from "react-router";
@@ -11,7 +11,7 @@ const App: VFC = () => {
   useEffect(() => {
     dispatch(getFoodList());
     dispatch(getShopList());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
