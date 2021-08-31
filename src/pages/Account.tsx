@@ -114,11 +114,12 @@ const Account: VFC = () => {
     }, 2000);
   }
 
-  useEffect(() => {
-    if (userData.id !== null) {
-      dispatch(getOrderList(userData.id));
-    }
-  }, [userData.id, dispatch])
+  // For Production Env
+  // useEffect(() => {
+  //   if (userData.id !== null) {
+  //     dispatch(getOrderList(userData.id));
+  //   }
+  // }, [userData.id, dispatch])
 
   const handleClose = (event?: SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
