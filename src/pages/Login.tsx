@@ -209,10 +209,12 @@ const Login: VFC = () => {
               label="Password"
               type="password"
               autoComplete="current-password"
+              value={userPassword}
+              onChange={(event) => setUserPassword(event.target.value)}
             />
           </Box>
           <Box className={classes.item}>
-            <Button className={classes.button} variant="contained" color="primary" onClick={handleLogin}>Login</Button>
+            <Button className={classes.button} variant="contained" color="primary" disabled={userName===''||userPassword===''} onClick={handleLogin}>Login</Button>
           </Box>
         </TabPanel>
         <TabPanel value={tab} index={1} dir={theme.direction}>
@@ -232,7 +234,7 @@ const Login: VFC = () => {
           />
           {showPayment ? <Card userData={userData} setUserData={setUserData} /> : null}
           <Box className={classes.item}>
-            <Button className={classes.button} variant="contained" color="primary" onClick={handleSignUp}>Sign Up</Button>
+            <Button className={classes.button} variant="contained" color="primary" disabled={userName===''||userPassword===''} onClick={handleSignUp}>Sign Up</Button>
           </Box>
         </TabPanel>
       </SwipeableViews>

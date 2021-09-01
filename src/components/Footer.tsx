@@ -1,4 +1,4 @@
-import { VFC, useState } from "react";
+import { VFC, useState, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { useHistory } from 'react-router-dom';
 import { changeNavigation, selectNavigation } from '../model/Navigator';
@@ -30,6 +30,10 @@ const Footer: VFC = () => {
   const cartAmount: number = useAppSelector(selectCart).items.length;
   const [index, setIndex] = useState(currentPage);
   const path = ["/", "/account", "/menu", "cart"];
+  
+  useEffect(()=>{
+    setIndex(currentPage)
+  },[currentPage]);
 
   return (
     <BottomNavigation
