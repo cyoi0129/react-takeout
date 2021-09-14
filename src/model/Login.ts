@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
 import { apiURL } from "../config";
+import Cookies from 'js-cookie';
 
 export interface userData {
   id: number | null;
@@ -43,6 +44,17 @@ const failedLoginUser: userData = {
   cardCvc: "",
 }
 
+export const initUserData = createAsyncThunk(
+  "login/initUserData",
+  async (requestUserToken: number) => {
+    const url = apiURL + "user";
+    const response = await fetch(url).then((res) => res.json());
+    const targetUser = response.find((item: userData) => item.id === requestUserToken);
+    const resultUser = targetUser ? targetUser : failedLoginUser;
+    return resultUser;
+  }
+);
+
 export const getUserData = createAsyncThunk(
   "login/getUserData",
   async (requestUserName: string) => {
@@ -50,6 +62,9 @@ export const getUserData = createAsyncThunk(
     const response = await fetch(url).then((res) => res.json());
     const targetUser = response.find((item: userData) => item.name === requestUserName);
     const resultUser = targetUser ? targetUser : failedLoginUser;
+    if (targetUser) {
+      Cookies.set('token', targetUser.id, { expires: 1 });
+    }
     return resultUser;
   }
 );
@@ -71,6 +86,7 @@ export const createNewUser = createAsyncThunk(
       headers: new Headers({ 'Content-type': 'application/json' })
 
     }).then((res) => res.json());
+    Cookies.set('token', response.id, { expires: 1 });
     return response;
   }
 );
@@ -104,9 +120,22 @@ const loginSlice = createSlice({
       state.cardName = "";
       state.cardExpiry = "";
       state.cardCvc = "";
+      Cookies.remove('token');
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(initUserData.fulfilled, (state, action) => {
+        state.isLogined = true;
+        state.isLoginFailed = false;
+        state.id = action.payload.id;
+        state.name = action.payload.name;
+        state.email = action.payload.email;
+        state.password = action.payload.password;
+        state.cardNumber = action.payload.cardNumber;
+        state.cardName = action.payload.cardName;
+        state.cardExpiry = action.payload.cardExpiry;
+        state.cardCvc = action.payload.cardCvc;
+    });
     builder.addCase(getUserData.fulfilled, (state, action) => {
       if (action.payload.id === 0) {
         state.isLogined = false;

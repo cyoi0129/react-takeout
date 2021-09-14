@@ -1,8 +1,8 @@
-import { VFC, useState, useEffect, SyntheticEvent } from "react";
+import { VFC, useState, SyntheticEvent } from "react";
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { Redirect } from "react-router-dom";
 import { selectLogin, loginStatus, userData, editUser } from '../model/Login';
-import { getOrderList, selectOrder, orderList } from "../model/Order";
+import { selectOrder, orderList } from "../model/Order";
 import { UserInfo, OrderHistory, Card, InfoEdit, Loading } from "../components";
 import { makeStyles, Theme, Typography, Box, Checkbox, Button, Container, Divider, Snackbar, FormControlLabel } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
