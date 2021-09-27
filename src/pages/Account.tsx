@@ -1,8 +1,9 @@
-import { VFC, useState, SyntheticEvent } from "react";
+import { VFC, useState, SyntheticEvent, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { Redirect } from "react-router-dom";
+import Cookies from 'js-cookie';
 import { selectLogin, loginStatus, userData, editUser } from '../model/Login';
-import { selectOrder, orderList } from "../model/Order";
+import { selectOrder, orderList, getOrderList } from "../model/Order";
 import { UserInfo, OrderHistory, Card, InfoEdit, Loading } from "../components";
 import { makeStyles, Theme, Typography, Box, Checkbox, Button, Container, Divider, Snackbar, FormControlLabel } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
@@ -45,6 +46,7 @@ function Alert(props: AlertProps) {
 }
 
 const Account: VFC = () => {
+  const token:number = Cookies.get('token')? Number(Cookies.get('token')) : 0;
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const loginSelector: loginStatus = useAppSelector(selectLogin);
@@ -53,6 +55,7 @@ const Account: VFC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [snackBar, setSnackBar] = useState<boolean>(false);
   const [showPayment, setShowPayment] = useState<boolean>(false);
+  const [userToken] = useState<number>(token);
 
   // UserData State
   const [userName, setUserName] = useState<string>(loginSelector.name);
@@ -114,12 +117,11 @@ const Account: VFC = () => {
     }, 2000);
   }
 
-  // For Production Env
-  // useEffect(() => {
-  //   if (userData.id !== null) {
-  //     dispatch(getOrderList(userData.id));
-  //   }
-  // }, [userData.id, dispatch])
+  useEffect(() => {
+    if (userToken !== 0) {
+      dispatch(getOrderList(userToken));
+    }
+  }, [userToken, dispatch])
 
   const handleClose = (event?: SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
